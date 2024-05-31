@@ -3,11 +3,13 @@ package terabu.shopappuser.service.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terabu.shopappuser.dto.users.UserRequest;
 import terabu.shopappuser.dto.users.UserResponse;
+import terabu.shopappuser.dto.users.UserToken;
 import terabu.shopappuser.entity.User;
 import terabu.shopappuser.entity.UserData;
 import terabu.shopappuser.entity.status.Role;
@@ -29,7 +31,7 @@ public class UserService{
     private final AuthenticationManager authenticationManager;
 
     @Transactional
-    public UserResponse registerNewUserAccount(UserRequest accountDto){
+    public UserToken registerNewUserAccount(UserRequest accountDto){
         User user = userMapper.toEntity(accountDto);
         if(userRepositorySpringData.findByLogin(accountDto.getLogin()).isPresent() || userRepositorySpringData.findByEmail(accountDto.getEmail()).isPresent()){
             throw new UserAlreadyExistException("Пользователь с такой почтой или логином уже существует");
@@ -50,10 +52,10 @@ public class UserService{
 
         userRepositorySpringData.save(user);
         var jwt = jwtService.generateToken(user);
-        return new UserResponse(jwt);
+        return new UserToken(jwt);
     }
 
-    public UserResponse authorization(UserRequest request) {
+    public UserToken authorization(UserRequest request) {
         var user = jwtService.loadUserByUsername(request.getLogin());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getLogin(),
@@ -62,7 +64,23 @@ public class UserService{
         ));
 
         var jwt = jwtService.generateToken(user);
-        return new UserResponse(jwt);
+        return new UserToken(jwt);
+    }
+
+
+    public UserResponse findUserByLogin(String login){
+        User user = userRepositorySpringData.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return userMapper.toResponse(user);
+    }
+
+    public UserResponse findUserByEmail(String email){
+        User user = userRepositorySpringData.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return userMapper.toResponse(user);
+    }
+
+    public UserResponse findUserById(Long id){
+        User user = userRepositorySpringData.findById(id).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return userMapper.toResponse(user);
     }
 
 

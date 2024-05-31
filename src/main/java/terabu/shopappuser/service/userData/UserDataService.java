@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import terabu.shopappuser.dto.data.UserDataRequest;
 import terabu.shopappuser.dto.data.UserDataResponse;
+import terabu.shopappuser.dto.users.UserResponse;
 import terabu.shopappuser.entity.User;
 import terabu.shopappuser.entity.UserData;
 import terabu.shopappuser.mapper.UserDataMapper;
@@ -49,6 +50,20 @@ public class UserDataService {
         return userDataMapper.toResponse(userData);
 
     }
+    public UserDataResponse save(UserData userData) {
+        UserData save = userDataRepository.save(userData);
+        log.info("UserData successfully saved");
+        UserDataResponse response = userDataMapper.toResponse(save);
+        response.setId(save.getId());
+        return response;
+    }
+    public UserDataResponse findByUserId(Long userId) {
+        UserData data = userDataRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        UserDataResponse response = userDataMapper.toResponse(data);
+        response.setId(data.getId());
+        return response;
+    }
+
 
 
 }

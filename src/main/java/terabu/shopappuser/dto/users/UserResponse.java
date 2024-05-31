@@ -1,13 +1,19 @@
 package terabu.shopappuser.dto.users;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import terabu.shopappuser.entity.status.Role;
 
+import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserResponse {
-    private String token;
+    private Long id;
+    private String login;
+    private String email;
+    private String password;
+    private LocalDate dateRegistration;
+    private String role;
 }

@@ -2,12 +2,11 @@ package terabu.shopappuser.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import terabu.shopappuser.dto.data.UserDataRequest;
 import terabu.shopappuser.dto.data.UserDataResponse;
+import terabu.shopappuser.dto.users.UserResponse;
+import terabu.shopappuser.entity.UserData;
 import terabu.shopappuser.service.userData.UserDataService;
 
 @RestController
@@ -21,5 +20,15 @@ public class UserDataController {
     @PostMapping("/update")
     public UserDataResponse updateData(@RequestBody @Valid UserDataRequest userDataRequest){
         return userDataService.update(userDataRequest);
+    }
+
+    @GetMapping("/findByUserId")
+    public UserDataResponse findById(@RequestParam Long userId) {
+        return userDataService.findByUserId(userId);
+    }
+
+    @PostMapping("/save")
+    public UserDataResponse save(@RequestBody UserData userData){
+        return userDataService.save(userData);
     }
 }

@@ -2,13 +2,11 @@ package terabu.shopappuser.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import terabu.shopappuser.dto.users.UserRequest;
 import terabu.shopappuser.dto.users.UserResponse;
+import terabu.shopappuser.dto.users.UserToken;
 import terabu.shopappuser.service.user.UserService;
 
 @RequiredArgsConstructor
@@ -19,15 +17,29 @@ public class UserController {
 
 
     @PostMapping("/registration")
-    public UserResponse registration(@Valid @RequestBody UserRequest userRequest) {
+    public UserToken registration(@Valid @RequestBody UserRequest userRequest) {
         return userService.registerNewUserAccount(userRequest);
     }
 
     @PostMapping("/authorization")
-    public UserResponse authorization(@Valid @RequestBody UserRequest userRequest) {
+    public UserToken authorization(@Valid @RequestBody UserRequest userRequest) {
         return userService.authorization(userRequest);
     }
 
+    @GetMapping("/findByLogin")
+    public UserResponse findByLogin(@RequestParam String login) {
+        return userService.findUserByLogin(login);
+    }
+
+    @GetMapping("/findByEmail")
+    public UserResponse findByEmail(@RequestParam String email) {
+        return userService.findUserByEmail(email);
+    }
+
+    @GetMapping("/findById")
+    public UserResponse findById(@RequestParam Long id) {
+        return userService.findUserById(id);
+    }
 
 
 }
