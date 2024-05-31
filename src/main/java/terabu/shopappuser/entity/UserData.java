@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @lombok.Data
 @Entity
-@Table(schema = "app", name = "data")
+@Table(name = "data")
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
