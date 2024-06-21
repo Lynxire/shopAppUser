@@ -9,6 +9,7 @@ import terabu.shopappuser.dto.data.UserDataResponse;
 import terabu.shopappuser.dto.users.UserResponse;
 import terabu.shopappuser.entity.User;
 import terabu.shopappuser.entity.UserData;
+import terabu.shopappuser.exception.user.UserNotFoundException;
 import terabu.shopappuser.mapper.UserDataMapper;
 import terabu.shopappuser.repository.UserDataRepository;
 import terabu.shopappuser.repository.UserRepositorySpringData;
@@ -22,7 +23,7 @@ public class UserDataService {
     private final UserRepositorySpringData userRepository;
     private final UserDataMapper userDataMapper;
     public UserDataResponse update(UserDataRequest userDataRequest) {
-        User user = userRepository.findById(userDataRequest.getUserId()).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        User user = userRepository.findById(userDataRequest.getUserId()).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         if(userDataRequest.getLogin() != null){
             user.setLogin(userDataRequest.getLogin());
         }
@@ -58,7 +59,7 @@ public class UserDataService {
         return response;
     }
     public UserDataResponse findByUserId(Long userId) {
-        UserData data = userDataRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        UserData data = userDataRepository.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         UserDataResponse response = userDataMapper.toResponse(data);
         response.setId(data.getId());
         return response;

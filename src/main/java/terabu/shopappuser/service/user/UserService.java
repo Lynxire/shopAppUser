@@ -14,6 +14,7 @@ import terabu.shopappuser.entity.User;
 import terabu.shopappuser.entity.UserData;
 import terabu.shopappuser.entity.status.Role;
 import terabu.shopappuser.exception.user.UserAlreadyExistException;
+import terabu.shopappuser.exception.user.UserNotFoundException;
 import terabu.shopappuser.mapper.UserMapper;
 import terabu.shopappuser.repository.UserDataRepository;
 import terabu.shopappuser.repository.UserRepositorySpringData;
@@ -69,17 +70,17 @@ public class UserService{
 
 
     public UserResponse findUserByLogin(String login){
-        User user = userRepositorySpringData.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        User user = userRepositorySpringData.findByLogin(login).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         return userMapper.toResponse(user);
     }
 
     public UserResponse findUserByEmail(String email){
-        User user = userRepositorySpringData.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        User user = userRepositorySpringData.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         return userMapper.toResponse(user);
     }
 
     public UserResponse findUserById(Long id){
-        User user = userRepositorySpringData.findById(id).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        User user = userRepositorySpringData.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         return userMapper.toResponse(user);
     }
 
